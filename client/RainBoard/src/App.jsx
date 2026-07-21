@@ -1,9 +1,11 @@
+import { useState } from "react";
 import "./App.css";
 import { Search } from "./Search";
 import { DashBoard } from "./DashBoard";
 import { CurrentCondition } from "./CurrentCondition";
 import { DashBoardBlock } from "./DashBoardBlock";
 import { WeekReport } from "./WeekReport";
+import { fetchWeather } from "./api";
 import {
   faDroplet,
   faGaugeHigh,
@@ -12,22 +14,56 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function App() {
-  const date = `Abuja, FCT\nMonday, 20 July`;
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleSearch = async (city) => {
+    if (!city.trim()) return;
+    try {
+      setError(null);
+      const data = await fetchWeather(city);
+      setWeather(data);
+    } catch (err) {
+      setError("City not found");
+      setWeather(null);
+    }
+  };
+
+  const location = weather?.location;
+  const current = weather?.current;
+  const forecast = weather?.forecast?.forecastday;
+
+  const headerText = location
+    ? `${location.name}, ${location.region || location.country}`
+    : "Search for a city";
 
   return (
     <>
       <header>
-        <pre id="city-date">{date}</pre>
-        <Search />
+        <pre id="city-date">{headerText}</pre>
+        <Search onSearch={handleSearch} />
       </header>
-      <CurrentCondition />
-      <DashBoard>
-        <DashBoardBlock icon={faDroplet} label="Humidity" value="72%" />
-        <DashBoardBlock icon={faGaugeHigh} label="Pressure" value="1013hPa" />
-        <DashBoardBlock icon={faSun} label="UV Index" value="6" />
-        <DashBoardBlock icon={faWind} label="Wind" value="12km/h" />
-      </DashBoard>
-      <WeekReport />
+
+      {error && <p className="error">{error}</p>}
+
+      {current && (
+        <CurrentCondition
+          condition={current.condition.text}
+          temperature={`${current.temp_c}°`}
+          location={`${location.name}, ${location.country}`}
+        />
+      )}
+
+      {current && (
+        <DashBoard>
+          <DashBoardBlock icon={faDroplet} label="Humidity" value={`${current.humidity}%`} />
+          <DashBoardBlock icon={faGaugeHigh} label="Pressure" value={`${current.pressure_mb}hPa`} />
+          <DashBoardBlock icon={faSun} label="UV Index" value={`${current.uv}`} />
+          <DashBoardBlock icon={faWind} label="Wind" value={`${current.wind_kph}km/h`} />
+        </DashBoard>
+      )}
+
+      {forecast && <WeekReport forecast={forecast} />}
     </>
   );
 }
