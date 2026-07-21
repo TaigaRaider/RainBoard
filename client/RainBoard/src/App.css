@@ -1,0 +1,267 @@
+/* ── Shared glass mixin via repeated props ─── */
+header,
+.dashboard,
+.dashboard-block,
+.current-condition,
+.weekReport {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+header:hover,
+.dashboard:hover,
+.dashboard-block:hover,
+.current-condition:hover,
+.weekReport:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Header ────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+}
+
+#city-date {
+  text-align: left;
+  white-space: pre;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* ── Search ────────────────────────────────── */
+.Search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.SearchBar {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.78rem;
+  color: #ddd;
+  outline: none;
+  width: 150px;
+  font-family: var(--sans);
+  transition:
+    border-color 0.25s,
+    background 0.25s;
+}
+
+.SearchBar::placeholder {
+  color: #4a4e58;
+}
+
+.SearchBar:focus {
+  border-color: rgba(232, 168, 56, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+#search-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--muted);
+  transition: all 0.25s;
+}
+
+#search-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Current Condition Hero ────────────────── */
+.current-condition {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+}
+
+.current-condition::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(232, 168, 56, 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.currentwrap {
+  flex-shrink: 0;
+}
+
+.current-icon {
+  font-size: 4rem;
+  color: var(--accent);
+  filter: drop-shadow(0 0 20px rgba(232, 168, 56, 0.25));
+}
+
+.curr-desc {
+  display: flex;
+  flex-direction: column;
+  align-items: first baseline;
+}
+
+.current-temp {
+  font-size: 4.5rem;
+  font-weight: 200;
+  line-height: 1;
+  color: var(--text-h);
+  letter-spacing: -3px;
+}
+
+.current-condition-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-top: 0.2rem;
+}
+
+.current-location {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* ── Dashboard ─────────────────────────────── */
+.dashboard {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.85rem;
+}
+
+.dashboard-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  padding: 0.9rem 0.5rem;
+  flex: 1;
+  gap: 0.3rem;
+  cursor: default;
+}
+
+.block-icon {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-bottom: 0.15rem;
+}
+
+.block-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.block-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+/* ── Week Report ───────────────────────────── */
+.weekReport {
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.day-report {
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s;
+  border-radius: 8px;
+  gap: 0.5rem;
+}
+
+.day-report:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.day-report:last-child {
+  border-bottom: none;
+}
+
+.day-name {
+  width: 2.5rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.day-icon {
+  font-size: 0.85rem;
+  color: var(--muted);
+  width: 1.5rem;
+  text-align: center;
+}
+
+.day-low {
+  font-size: 0.78rem;
+  color: #3e4250;
+  min-width: 2.2rem;
+  text-align: right;
+  font-weight: 500;
+}
+
+.day-high {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text-h);
+  min-width: 2.2rem;
+  text-align: left;
+}
+
+.temp-bar-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  position: relative;
+}
+
+.temp-bar-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #3b82f6, #e8a838);
+}

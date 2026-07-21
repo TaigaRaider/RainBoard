@@ -1,0 +1,66 @@
+:root {
+  --text: #c8cad0;
+  --text-h: #f0f1f3;
+  --bg: #0a0e1a;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg-hover: rgba(255, 255, 255, 0.07);
+  --accent: #e8a838;
+  --accent-dim: rgba(232, 168, 56, 0.15);
+  --muted: #5a5e6a;
+  --frost: rgba(255, 255, 255, 0.06);
+
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(56, 40, 120, 0.5) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 80% 20%,
+      rgba(20, 60, 120, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 20% 80%,
+      rgba(80, 30, 90, 0.25) 0%,
+      transparent 50%
+    ),
+    linear-gradient(180deg, #080b16 0%, #0d1220 40%, #111828 100%);
+}
+
+#root {
+  width: 520px;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.25rem;
+  gap: 1rem;
+}
