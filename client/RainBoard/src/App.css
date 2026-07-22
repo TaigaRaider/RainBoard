@@ -60,6 +60,8 @@ header {
   font-family: var(--sans);
   transition:
     border-color 0.25s,
+    scale 0.3s ease-out,
+    margin 0.15s,
     background 0.25s;
 }
 
@@ -69,7 +71,9 @@ header {
 
 .SearchBar:focus {
   border-color: rgba(232, 168, 56, 0.35);
-  background: rgba(255, 255, 255, 0.07);
+  background: #ffffff12;
+  scale: 1.1 1;
+  margin-right: 5px;
 }
 
 #search-btn {
@@ -80,15 +84,29 @@ header {
   cursor: pointer;
   font-size: 0.85rem;
   color: var(--muted);
-  transition: all 0.25s;
+  transition: all 0.25s ease-out;
 }
 
 #search-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #ccc;
   border-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
 }
+#search-btn:focus{
+  animation: circlr 0.35s ease-in;
+}
+@keyframes circlr {
+  0%{
+    background-color: initial;
+  }
+  50%{
 
+  }
+  100%{
+    
+  }
+}
 /* ── Current Condition Hero ────────────────── */
 .current-condition {
   display: flex;
@@ -124,8 +142,21 @@ header {
   font-size: 4rem;
   color: var(--accent);
   filter: drop-shadow(0 0 20px rgba(232, 168, 56, 0.25));
+  animation: float-an 3s linear infinite;
 }
-
+@keyframes float-an {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-3px);
+  }
+  75% {
+    transform: translateY(3px);
+  }
+}
 .curr-desc {
   display: flex;
   flex-direction: column;
@@ -172,8 +203,12 @@ header {
   flex: 1;
   gap: 0.3rem;
   cursor: default;
+  transition: all 150ms ease-in-out;
 }
-
+.dashboard-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 2px #546ec9;
+}
 .block-icon {
   font-size: 1.1rem;
   color: var(--muted);
@@ -264,4 +299,11 @@ header {
   height: 100%;
   border-radius: 4px;
   background: linear-gradient(90deg, #3b82f6, #e8a838);
+  animation: fillbar 1s ease-out 1;
+  animation-fill-mode: forwards;
+  animation-delay: initial;}
+@keyframes fillbar {
+  0%{
+    width: 0;
+  }  
 }
