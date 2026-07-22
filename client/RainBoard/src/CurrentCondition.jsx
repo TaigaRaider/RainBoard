@@ -8,6 +8,7 @@ import {
   faCloud,
   faSmog,
 } from "@fortawesome/free-solid-svg-icons";
+import { useCountUp } from "./useCountUp";
 
 const iconMap = {
   Clear: faSun,
@@ -30,9 +31,15 @@ const iconMap = {
 
 const fallbackIcon = faCloud;
 
+const parseValue = (str) => {
+  const match = String(str).match(/^([-+]?\d+\.?\d*)(.*)/);
+  if (!match) return { number: 0, suffix: str };
+  return { number: Number(match[1]), suffix: match[2] };
+};
+
 export const CurrentCondition = ({
   condition = "Clear",
-  temperature = "—",
+  temperature = "0°",
   location = "",
 }) => {
   const matchedKey = Object.keys(iconMap).find(
@@ -40,10 +47,13 @@ export const CurrentCondition = ({
   );
   const icon = matchedKey ? iconMap[matchedKey] : fallbackIcon;
 
+  const { number, suffix } = parseValue(temperature);
+  const displayTemp = useCountUp(number, 1000);
+
   return (
     <div className="current-condition">
       <span className="curr-desc">
-        <h1 className="current-temp">{temperature}</h1>
+        <h1 className="current-temp">{displayTemp}{suffix}</h1>
         <p className="current-condition-text">{condition}</p>
         <p className="current-location">{location}</p>
       </span>

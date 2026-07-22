@@ -88,7 +88,11 @@ header {
 }
 
 #search-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background:radial-gradient(
+      ellipse 90% 90% at 50% 50%,
+      rgba(255, 255, 255, 0.5) 0%,
+      transparent 90%
+    );
   color: #ccc;
   border-color: rgba(255, 255, 255, 0.15);
   transform: scale(1.05);
@@ -98,13 +102,17 @@ header {
 }
 @keyframes circlr {
   0%{
-    background-color: initial;
+    background-color: none;
   }
   50%{
 
   }
   100%{
-    
+    background: radial-gradient(
+      ellipse 50% 40% at 20% 80%,
+      rgba(80, 30, 90, 0.25) 0%,
+      transparent 50%
+    );
   }
 }
 /* ── Current Condition Hero ────────────────── */
@@ -191,8 +199,23 @@ header {
   display: flex;
   gap: 0.6rem;
   padding: 0.85rem;
-}
 
+  animation: slide-in 0.5s ease-out 1;
+}
+@keyframes slide-in{
+  0%{
+    transform: translateX(-20px);
+  }
+  50%{
+    transform: translateX(-15px);
+  }
+  75%{
+    transform: translateX(-7.5px);
+  }
+  100%{
+    transform: translateX(0);
+  }
+}
 .dashboard-block {
   display: flex;
   flex-direction: column;
@@ -204,6 +227,15 @@ header {
   gap: 0.3rem;
   cursor: default;
   transition: all 150ms ease-in-out;
+  animation: bounce-in 1s ease-out 0.5s;
+}
+@keyframes bounce-in {
+  0%, 100%{
+    transform: translateY(0); 
+  }
+  50%{
+    transform: translateY(-3px);
+  }
 }
 .dashboard-block:hover {
   transform: translateY(-2px);
