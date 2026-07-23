@@ -1,3 +1,24 @@
+@property --bg-layer-1 {
+  syntax: "<color>";
+  initial-value: rgba(56, 40, 120, 0.5);
+  inherits: true;
+}
+@property --bg-layer-2 {
+  syntax: "<color>";
+  initial-value: rgba(20, 60, 120, 0.4);
+  inherits: true;
+}
+@property --bg-layer-3 {
+  syntax: "<color>";
+  initial-value: rgba(80, 30, 90, 0.25);
+  inherits: true;
+}
+@property --bg-base {
+  syntax: "<color>";
+  initial-value: #080b16;
+  inherits: true;
+}
+
 :root {
   --text: #c8cad0;
   --text-h: #f0f1f3;
@@ -35,23 +56,28 @@
 body {
   margin: 0;
   min-height: 100svh;
+  transition:
+    --bg-layer-1 2.5s ease,
+    --bg-layer-2 2.5s ease,
+    --bg-layer-3 2.5s ease,
+    --bg-base 2.5s ease;
   background:
     radial-gradient(
       ellipse 80% 60% at 50% 0%,
-      rgba(56, 40, 120, 0.5) 0%,
+      var(--bg-layer-1) 0%,
       transparent 60%
     ),
     radial-gradient(
       ellipse 60% 50% at 80% 20%,
-      rgba(20, 60, 120, 0.4) 0%,
+      var(--bg-layer-2) 0%,
       transparent 100%
     ),
     radial-gradient(
       ellipse 50% 40% at 20% 80%,
-      rgba(80, 30, 90, 0.25) 0%,
+      var(--bg-layer-3) 0%,
       transparent 50%
     ),
-    linear-gradient(180deg, #080b16 0%, #0d1220 40%, #111828 100%);
+    linear-gradient(180deg, var(--bg-base) 0%, #0d1220 40%, #111828 100%);
 }
 
 #root {

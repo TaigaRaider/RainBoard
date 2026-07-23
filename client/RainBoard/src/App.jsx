@@ -6,12 +6,36 @@ import { CurrentCondition } from "./CurrentCondition";
 import { DashBoardBlock } from "./DashBoardBlock";
 import { WeekReport } from "./WeekReport";
 import { fetchWeather } from "./api";
+import { conditionToTheme } from "./conditionThemes";
+import { Logo } from "./Logo";
 import {
   faDroplet,
   faGaugeHigh,
   faSun,
   faWind,
 } from "@fortawesome/free-solid-svg-icons";
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  root.style.setProperty("--bg-layer-1", theme.layer1);
+  root.style.setProperty("--bg-layer-2", theme.layer2);
+  root.style.setProperty("--bg-layer-3", theme.layer3);
+  root.style.setProperty("--bg-base", theme.base);
+}
+
+function isNightTime(location) {
+  if (!location?.tz_id) return false;
+  try {
+    const now = new Date();
+    const localTime = new Date(
+      now.toLocaleString("en-US", { timeZone: location.tz_id })
+    );
+    const hour = localTime.getHours();
+    return hour < 6 || hour >= 19;
+  } catch {
+    return false;
+  }
+}
 
 export default function App() {
   const [weather, setWeather] = useState(null);
@@ -30,9 +54,16 @@ export default function App() {
       },
       () => {
         setError("Location access denied. Search for a city instead.");
-      },
+      }
     );
   }, []);
+
+  useEffect(() => {
+    if (!weather?.current) return;
+    const night = isNightTime(weather.location);
+    const theme = conditionToTheme(weather.current.condition.text, night);
+    applyTheme(theme);
+  }, [weather]);
 
   const handleSearch = async (city) => {
     if (!city.trim()) return;
@@ -50,15 +81,10 @@ export default function App() {
   const current = weather?.current;
   const forecast = weather?.forecast?.forecastday;
 
-  const headerText = location
-    ? `${location.name},\n ${location.region || location.country}`
-    : "Search for a city";
-
-  console.log(weather);
   return (
     <>
       <header>
-        <pre id="city-date">{headerText}</pre>
+        <Logo />
         <Search onSearch={handleSearch} />
       </header>
 
@@ -69,6 +95,7 @@ export default function App() {
           condition={current.condition.text}
           temperature={`${current.temp_c}°`}
           location={`${location.region}, ${location.country}`}
+          time={location.localtime}
         />
       )}
 

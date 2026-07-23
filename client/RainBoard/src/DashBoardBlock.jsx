@@ -9,7 +9,7 @@ const parseValue = (str) => {
 
 export const DashBoardBlock = ({ icon, label, value = "0" }) => {
   const { number, suffix } = parseValue(value);
-  const displayValue = useCountUp(number, 1000);
+  const displayValue = useCountUp(number, 500);
 
   return (
     <div className="dashboard-block">

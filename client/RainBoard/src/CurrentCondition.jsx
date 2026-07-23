@@ -41,6 +41,7 @@ export const CurrentCondition = ({
   condition = "Clear",
   temperature = "0°",
   location = "",
+  time = "",
 }) => {
   const matchedKey = Object.keys(iconMap).find(
     (key) => key.toLowerCase() === condition.toLowerCase()
@@ -48,13 +49,21 @@ export const CurrentCondition = ({
   const icon = matchedKey ? iconMap[matchedKey] : fallbackIcon;
 
   const { number, suffix } = parseValue(temperature);
-  const displayTemp = useCountUp(number, 1000);
+  const displayTemp = useCountUp(number, 500);
+
+  const formattedTime = time
+    ? new Date(time.replace(" ", "T")).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
 
   return (
     <div className="current-condition">
       <span className="curr-desc">
         <h1 className="current-temp">{displayTemp}{suffix}</h1>
         <p className="current-condition-text">{condition}</p>
+        {formattedTime && <p className="current-time">{formattedTime}</p>}
         <p className="current-location">{location}</p>
       </span>
       <span className="currentwrap">
