@@ -9,6 +9,7 @@ import {
   faSmog,
 } from "@fortawesome/free-solid-svg-icons";
 import { useCountUp } from "./useCountUp";
+import { useUnits } from "./UnitsContext";
 
 const iconMap = {
   Clear: faSun,
@@ -40,9 +41,13 @@ const parseValue = (str) => {
 export const CurrentCondition = ({
   condition = "Clear",
   temperature = "0°",
+  feelsLike,
   location = "",
   time = "",
+  lastUpdated = "",
 }) => {
+  const { tempC } = useUnits();
+
   const matchedKey = Object.keys(iconMap).find(
     (key) => key.toLowerCase() === condition.toLowerCase()
   );
@@ -62,9 +67,15 @@ export const CurrentCondition = ({
     <div className="current-condition">
       <span className="curr-desc">
         <h1 className="current-temp">{displayTemp}{suffix}</h1>
+        {feelsLike != null && (
+          <p className="current-feels">Feels like {tempC(feelsLike)}°</p>
+        )}
         <p className="current-condition-text">{condition}</p>
         {formattedTime && <p className="current-time">{formattedTime}</p>}
         <p className="current-location">{location}</p>
+        {lastUpdated && (
+          <p className="current-updated">Updated {lastUpdated}</p>
+        )}
       </span>
       <span className="currentwrap">
         <FontAwesomeIcon icon={icon} className="current-icon" />

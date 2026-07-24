@@ -5,6 +5,11 @@ import { DashBoard } from "./DashBoard";
 import { CurrentCondition } from "./CurrentCondition";
 import { DashBoardBlock } from "./DashBoardBlock";
 import { WeekReport } from "./WeekReport";
+import { HourlyForecast } from "./HourlyForecast";
+import { UnitToggle } from "./UnitToggle";
+import { SearchHistory } from "./SearchHistory";
+import { addToHistory } from "./historyStore";
+import { UnitsProvider, useUnits } from "./UnitsContext";
 import { fetchWeather } from "./api";
 import { conditionToTheme } from "./conditionThemes";
 import { Logo } from "./Logo";
@@ -13,6 +18,7 @@ import {
   faGaugeHigh,
   faSun,
   faWind,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 
 function applyTheme(theme) {
@@ -37,13 +43,16 @@ function isNightTime(location) {
   }
 }
 
-export default function App() {
+function WeatherApp() {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { windKph, windSuffix } = useUnits();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        setLoading(true);
         try {
           const { latitude, longitude } = position.coords;
           const data = await fetchWeather(`${latitude},${longitude}`);
@@ -51,6 +60,7 @@ export default function App() {
         } catch {
           setError("Could not load weather for your location");
         }
+        setLoading(false);
       },
       () => {
         setError("Location access denied. Search for a city instead.");
@@ -67,19 +77,30 @@ export default function App() {
 
   const handleSearch = async (city) => {
     if (!city.trim()) return;
+    setLoading(true);
     try {
       setError(null);
       const data = await fetchWeather(city);
       setWeather(data);
-    } catch (err) {
+      addToHistory(city.trim());
+    } catch {
       setError("City not found");
       setWeather(null);
     }
+    setLoading(false);
   };
 
   const location = weather?.location;
   const current = weather?.current;
   const forecast = weather?.forecast?.forecastday;
+
+  const todayHours = forecast?.[0]?.hour || [];
+  const now = new Date();
+  const currentHour = now.getHours();
+  const upcomingHours = todayHours.filter((h) => {
+    const hour = parseInt(h.time.split(" ")[1], 10);
+    return hour >= currentHour;
+  });
 
   return (
     <>
@@ -88,18 +109,35 @@ export default function App() {
         <Search onSearch={handleSearch} />
       </header>
 
+      <UnitToggle />
+      <SearchHistory onSelect={handleSearch} />
+
       {error && <p className="error">{error}</p>}
 
-      {current && (
+      {loading && (
+        <div className="skeleton-group">
+          <div className="skeleton skeleton-hero" />
+          <div className="skeleton-row">
+            <div className="skeleton skeleton-block" />
+            <div className="skeleton skeleton-block" />
+            <div className="skeleton skeleton-block" />
+            <div className="skeleton skeleton-block" />
+          </div>
+        </div>
+      )}
+
+      {current && !loading && (
         <CurrentCondition
           condition={current.condition.text}
           temperature={`${current.temp_c}°`}
+          feelsLike={current.feelslike_c}
           location={`${location.region}, ${location.country}`}
           time={location.localtime}
+          lastUpdated={current.last_updated}
         />
       )}
 
-      {current && (
+      {current && !loading && (
         <DashBoard>
           <DashBoardBlock
             icon={faDroplet}
@@ -119,12 +157,29 @@ export default function App() {
           <DashBoardBlock
             icon={faWind}
             label="Wind"
-            value={`${current.wind_kph}km/h`}
+            value={`${windKph(current.wind_kph)}${windSuffix}`}
+          />
+          <DashBoardBlock
+            icon={faEye}
+            label="Visibility"
+            value={`${current.vis_km}km`}
           />
         </DashBoard>
       )}
 
-      {forecast && <WeekReport forecast={forecast} />}
+      {upcomingHours.length > 0 && !loading && (
+        <HourlyForecast hours={upcomingHours} />
+      )}
+
+      {forecast && !loading && <WeekReport forecast={forecast} />}
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <UnitsProvider>
+      <WeatherApp />
+    </UnitsProvider>
   );
 }

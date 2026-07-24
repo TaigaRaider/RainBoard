@@ -8,6 +8,7 @@ import {
   faCloud,
   faSmog,
 } from "@fortawesome/free-solid-svg-icons";
+import { useUnits } from "./UnitsContext";
 
 const iconMap = {
   Clear: faSun,
@@ -40,6 +41,8 @@ const getDayName = (dateStr, index) => {
 };
 
 export const WeekReport = ({ forecast = [] }) => {
+  const { tempC } = useUnits();
+
   const temps = forecast.flatMap((d) => [d.day.mintemp_c, d.day.maxtemp_c]);
   const overallLow = Math.min(...temps);
   const overallHigh = Math.max(...temps);
@@ -48,10 +51,13 @@ export const WeekReport = ({ forecast = [] }) => {
   return (
     <div className="weekReport">
       {forecast.map((item, i) => {
-        const low = item.day.mintemp_c;
-        const high = item.day.maxtemp_c;
-        const left = ((low - overallLow) / range) * 100;
-        const width = ((high - low) / range) * 100;
+        const low = tempC(item.day.mintemp_c);
+        const high = tempC(item.day.maxtemp_c);
+        const rawLow = item.day.mintemp_c;
+        const rawHigh = item.day.maxtemp_c;
+        const left = ((rawLow - overallLow) / range) * 100;
+        const width = ((rawHigh - rawLow) / range) * 100;
+        const rain = item.day.daily_chance_of_rain;
         return (
           <div className="day-report" key={item.date}>
             <span className="day-name">{getDayName(item.date, i)}</span>
@@ -64,6 +70,9 @@ export const WeekReport = ({ forecast = [] }) => {
               />
             </div>
             <span className="day-high">{high}°</span>
+            {rain > 0 && (
+              <span className="day-rain">💧{rain}%</span>
+            )}
           </div>
         );
       })}
